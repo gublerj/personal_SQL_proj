@@ -8,6 +8,8 @@ cursor.execute("CREATE TABLE IF NOT EXISTS contacts (name text,address text,phon
 
 choice = None
 
+# menue structure
+
 while choice != "6":
     print("1) Display Contacts")
     print("2) Add Contact")
@@ -19,7 +21,9 @@ while choice != "6":
     print(" ")
     print(" ")
 
+
     if choice == "1":
+        #display all contacts
 
         cursor.execute("SELECT * FROM contacts");
 
@@ -27,11 +31,13 @@ while choice != "6":
         # db_len = len(cursor.fetchall())
         #db_index_range = range(db_len)
 
+
         for i in cursor.fetchall():
             print(i[0])
             print(i[1])
             print(i[2])
             print(i[3])
+            print("")
 
 
     elif choice =="2":
@@ -39,12 +45,14 @@ while choice != "6":
         print("Adding new contact")
         print(" ")
         
+        # get user input
         name = input(" Name: ")
         address = input(" Address: ")
         phone = input(" Phone: ")
         company = input(" Company: ")
         print(" ")
 
+        # combine user input
         values = (name, address, phone, company)
 
         cursor.execute("INSERT INTO contacts VALUES (?,?,?,?)", values)
@@ -56,6 +64,7 @@ while choice != "6":
         name = input("WHo do you want to update?: ")
         update_choice = None
         
+        # sub menue setup
         print("What do you want to update?")
         print("1) Name")
         print("2) Address")
@@ -66,6 +75,7 @@ while choice != "6":
         print(" ")
 
         if update_choice == "1":
+            # get new name and update the database
             new = input("enter new name: ")
             values = (new,name)
 
@@ -74,6 +84,7 @@ while choice != "6":
 
 
         if update_choice == "2":
+            # get new address and update the database
             new = input("enter address: ")
 
             values = (new,name)
@@ -82,6 +93,7 @@ while choice != "6":
             connection.commit()
 
         if update_choice == "3":
+            # get new phone and update the database
             new = input("enter phone: ")
 
             values = (new,name)
@@ -90,6 +102,7 @@ while choice != "6":
             connection.commit()
 
         if update_choice == "4":
+            # get new company and update the database
             new = input("enter company: ")
 
             values = (new,name)
@@ -119,25 +132,32 @@ while choice != "6":
         print("What do you want to Query?")
         print("enter fields (such as name). When done enter Q")
         
+        # initalize the loop
         q_choice = None
         query_list = []
+
+        # they enter fields till they enter q
+        # append all inputs into one list
+        
         while q_choice != "Q" and q_choice != "q":
             query_list.append(q_choice)
             
             q_choice = input("> ")
 
             
-
+        # get rid of first item in list becacuse its not needed
         query_list.pop(0)
         print("")
 
+        # turn list into string to prepare for formating
         select_string = ','.join(query_list)
         print(select_string) 
 
+        # selecting the list of things the user wanted from the database
         cursor.execute("SELECT "+select_string+" FROM contacts")
-
         q_results = cursor.fetchall()
 
+        # simple formating to display
         for i in q_results:
             print(i[0] + " , " + i[1])
 
